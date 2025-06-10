@@ -1,0 +1,224 @@
+C51 COMPILER V7.08   FINALPROJECT                                                          06/05/2025 03:39:48 PAGE 1   
+
+
+C51 COMPILER V7.08, COMPILATION OF MODULE FINALPROJECT
+OBJECT MODULE PLACED IN FinalProject.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE FinalProject.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h> //包含頭文件，一般情況不需要改動，頭文件包含特殊功能寄存器的定義
+   2          
+   3          
+   4          #define DataPort P0 //定義數據端口 程序中遇到DataPort 則用P0 替換
+   5          #define KeyPort P1
+   6          sbit LATCH1=P2^2;//定義鎖存使能端口 段鎖存
+   7          sbit LATCH2=P2^3;//                 位鎖存
+   8          
+   9          unsigned char code dofly_DuanMa[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,
+  10                                                           0x77,0x7c,0x39,0x5e,0x79,0x71};// 顯示段碼值0~F
+  11          unsigned char code dofly_WeiMa[]={0xfe,0xfd,0xfb,0xf7,0xef,0xdf,0xbf,0x7f};//分別對應相應的數碼管點亮,即位
+             -碼
+  12          unsigned char TempData[10]; //存儲顯示值的全局變量
+  13          
+  14          
+  15          int readCounter = 0;
+  16          void DelayUs2x(unsigned char t);//us級延時函數聲明 
+  17          void DelayMs(unsigned char t); //ms級延時
+  18          void Display(unsigned char FirstBit,unsigned char Num);//數碼管顯示函數
+  19          unsigned char KeyScan(void);//鍵盤掃瞄
+  20          unsigned char KeyPro(void);
+  21          void Init_Timer0(void);//定時器初始化
+  22          
+  23          void InitUART  (void)
+  24          {
+  25   1      
+  26   1          SCON  = 0x50;                       // SCON: 模式 1, 8-bit UART, 使能接收  
+  27   1          TMOD |= 0x20;               // TMOD: timer 1, mode 2, 8-bit 重裝
+  28   1          TH1   = 0xFD;               // TH1:  重裝值 9600 波特率 晶振 11.0592MHz  
+  29   1          TR1   = 1;                  // TR1:  timer 1 打開                         
+  30   1          EA    = 1;                  //打開總中斷
+  31   1          ES    = 1;                  //打開串口中斷
+  32   1      }  
+  33          
+  34          
+  35          void SendByte(unsigned char dat)
+  36          {
+  37   1       SBUF = dat;
+  38   1       while(!TI);
+  39   1            TI = 0;
+  40   1      }
+  41          
+  42          void UART_SER (void) interrupt 4
+  43          {
+  44   1          unsigned char Temp;
+  45   1         
+  46   1         if(RI)                      
+  47   1           {
+  48   2                RI=0;                     
+  49   2                Temp=SBUF;
+  50   2                if(readCounter < 3){
+  51   3                      TempData[readCounter] = dofly_DuanMa[Temp];//收到esp32的溫度資訊 ex:23.25度，收到的是2,3,2,5
+  52   3                      readCounter++;
+  53   3                }else{
+  54   3                       TempData[readCounter] = dofly_DuanMa[Temp];
+C51 COMPILER V7.08   FINALPROJECT                                                          06/05/2025 03:39:48 PAGE 2   
+
+  55   3                       TempData[1] = TempData[1] | 0x80;//小數點
+  56   3                       readCounter = 0;
+  57   3                }
+  58   2      
+  59   2               }
+  60   1         if(TI)                      
+  61   1           TI=0;
+  62   1      } 
+  63          
+  64          
+  65          
+  66          
+  67          
+  68          void main (void)
+  69          {
+  70   1      unsigned char num,i,j;                  
+  71   1      unsigned char temp[8];
+  72   1      bit Flag;
+  73   1      int setFlag = 0;
+  74   1      Init_Timer0();
+  75   1      InitUART();
+  76   1      
+  77   1      while (1)        
+  78   1        {
+  79   2              num=KeyPro();
+  80   2              if(num >= 0 && num < 17)
+  81   2                      SBUF = num;//傳送按鍵編號，對應到esp32裡面的縣市list
+  82   2        }
+  83   1        Display(0, 4);
+  84   1      }
+*** WARNING C280 IN LINE 70 OF FINALPROJECT.C: 'i': unreferenced local variable
+*** WARNING C280 IN LINE 70 OF FINALPROJECT.C: 'j': unreferenced local variable
+*** WARNING C280 IN LINE 71 OF FINALPROJECT.C: 'temp': unreferenced local variable
+*** WARNING C280 IN LINE 72 OF FINALPROJECT.C: 'Flag': unreferenced local variable
+  85          
+  86          void DelayUs2x(unsigned char t)
+  87          {   
+  88   1       while(--t);
+  89   1      }
+  90          
+  91          void DelayMs(unsigned char t)
+  92          {
+  93   1           
+  94   1       while(t--)
+  95   1       {
+  96   2           DelayUs2x(245);
+  97   2               DelayUs2x(245);
+  98   2       }
+  99   1      }
+ 100          
+ 101          void Display(unsigned char FirstBit,unsigned char Num)
+ 102          {
+ 103   1            static unsigned char i=0;
+ 104   1                
+ 105   1      
+ 106   1                 DataPort=0;   //清空數據，防止有交替重影
+ 107   1             LATCH1=1;     //段鎖存
+ 108   1             LATCH1=0;
+ 109   1      
+ 110   1             DataPort=dofly_WeiMa[i+FirstBit]; //取位碼 
+ 111   1             LATCH2=1;     //位鎖存
+ 112   1             LATCH2=0;
+C51 COMPILER V7.08   FINALPROJECT                                                          06/05/2025 03:39:48 PAGE 3   
+
+ 113   1      
+ 114   1             DataPort=TempData[i]; //取顯示數據，段碼
+ 115   1             LATCH1=1;     //段鎖存
+ 116   1             LATCH1=0;
+ 117   1             
+ 118   1                 i++;
+ 119   1             if(i==Num)
+ 120   1                    i=0;
+ 121   1      
+ 122   1      
+ 123   1      }
+ 124          
+ 125          void Init_Timer0(void)
+ 126          {
+ 127   1       TMOD |= 0x01;    //使用模式1，16位定時器，使用"|"符號可以在使用多個定時器時不受影響                 
+ 128   1       //TH0=0x00;          //給定初值
+ 129   1       //TL0=0x00;
+ 130   1       EA=1;            //總中斷打開
+ 131   1       ET0=1;           //定時器中斷打開
+ 132   1       TR0=1;           //定時器開關打開
+ 133   1      }
+ 134          /*------------------------------------------------
+ 135                           定時器中斷子程序
+ 136          ------------------------------------------------*/
+ 137          void Timer0_isr(void) interrupt 1 
+ 138          {
+ 139   1       TH0=(65536-2000)/256;            //重新賦值 2ms
+ 140   1       TL0=(65536-2000)%256;
+ 141   1       
+ 142   1       Display(0,8);       // 調用數碼管掃瞄
+ 143   1      
+ 144   1      }
+ 145          
+ 146          
+ 147          unsigned char KeyScan(void)  //鍵盤掃瞄函數，使用行列反轉掃瞄法
+ 148          {
+ 149   1       unsigned char cord_h,cord_l;//行列值中間變量
+ 150   1       KeyPort=0x0f;            //行線輸出全為0
+ 151   1       cord_h=KeyPort&0x0f;     //讀入列線值
+ 152   1       if(cord_h!=0x0f)    //先檢測有無按鍵按下
+ 153   1       {
+ 154   2        DelayMs(10);        //去抖
+ 155   2        if((KeyPort&0x0f)!=0x0f)
+ 156   2        {
+ 157   3          cord_h=KeyPort&0x0f;  //讀入列線值
+ 158   3          KeyPort=cord_h|0xf0;  //輸出當前列線值
+ 159   3          cord_l=KeyPort&0xf0;  //讀入行線值
+ 160   3      
+ 161   3          while((KeyPort&0xf0)!=0xf0);//等待鬆開並輸出
+ 162   3      
+ 163   3          return(cord_h+cord_l);//鍵盤最後組合碼值
+ 164   3         }
+ 165   2        }return(0xff);     //返回該值
+ 166   1      }
+ 167          
+ 168          unsigned char KeyPro(void)
+ 169          {
+ 170   1       switch(KeyScan())
+ 171   1       {
+ 172   2        case 0x7e:return 0;break;//0 
+ 173   2        case 0x7d:return 1;break;//1
+ 174   2        case 0x7b:return 2;break;//2
+C51 COMPILER V7.08   FINALPROJECT                                                          06/05/2025 03:39:48 PAGE 4   
+
+ 175   2        case 0x77:return 3;break;//3
+ 176   2        case 0xbe:return 4;break;//4
+ 177   2        case 0xbd:return 5;break;//5
+ 178   2        case 0xbb:return 6;break;//6
+ 179   2        case 0xb7:return 7;break;//7
+ 180   2        case 0xde:return 8;break;//8
+ 181   2        case 0xdd:return 9;break;//9
+ 182   2        case 0xdb:return 10;break;//a
+ 183   2        case 0xd7:return 11;break;//b
+ 184   2        case 0xee:return 12;break;//c
+ 185   2        case 0xed:return 13;break;//d
+ 186   2        case 0xeb:return 14;break;//e
+ 187   2        case 0xe7:return 15;break;//f
+ 188   2        default:return 0xff;break;
+ 189   2       }
+ 190   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    437    ----
+   CONSTANT SIZE    =     24    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     13      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)

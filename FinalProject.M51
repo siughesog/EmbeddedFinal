@@ -1,0 +1,332 @@
+BL51 BANKED LINKER/LOCATER V5.03                                                        06/05/2025  03:39:48  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE FinalProject.obj TO FinalProject RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  FinalProject.obj (FINALPROJECT)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  FinalProject (FINALPROJECT)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     000DH     UNIT         ?DT?FINALPROJECT
+                    0015H     000BH                  *** GAP ***
+            BIT     0020H.0   0000H.1   UNIT         _BIT_GROUP_
+                    0020H.1   0000H.7                *** GAP ***
+            DATA    0021H     000CH     UNIT         _DATA_GROUP_
+            IDATA   002DH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0008H     UNIT         ?PR?_SENDBYTE?FINALPROJECT
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     0015H     UNIT         ?PR?_DELAYMS?FINALPROJECT
+            CODE    0023H     0003H     ABSOLUTE     
+            CODE    0026H     008CH     UNIT         ?C_C51STARTUP
+            CODE    00B2H     006EH     UNIT         ?PR?KEYPRO?FINALPROJECT
+            CODE    0120H     0062H     UNIT         ?PR?UART_SER?FINALPROJECT
+            CODE    0182H     0036H     UNIT         ?PR?KEYSCAN?FINALPROJECT
+            CODE    01B8H     002DH     UNIT         ?PR?TIMER0_ISR?FINALPROJECT
+            CODE    01E5H     002BH     UNIT         ?PR?_DISPLAY?FINALPROJECT
+            CODE    0210H     0026H     UNIT         ?C?LIB_CODE
+            CODE    0236H     001DH     UNIT         ?PR?MAIN?FINALPROJECT
+            CODE    0253H     0018H     UNIT         ?CO?FINALPROJECT
+            CODE    026BH     0010H     UNIT         ?PR?INITUART?FINALPROJECT
+            CODE    027BH     000AH     UNIT         ?PR?INIT_TIMER0?FINALPROJECT
+            CODE    0285H     0008H     UNIT         ?C_INITSEG
+            CODE    028DH     0003H     UNIT         ?PR?_DELAYUS2X?FINALPROJECT
+
+
+
+OVERLAY MAP OF MODULE:   FinalProject (FINALPROJECT)
+
+
+SEGMENT                                 BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT                START    LENGTH     START    LENGTH
+------------------------------------------------------------------------
+?PR?UART_SER?FINALPROJECT            -----    -----      -----    -----
+BL51 BANKED LINKER/LOCATER V5.03                                                      06/05/2025  03:39:48  PAGE 2
+
+
+  +--> ?CO?FINALPROJECT
+
+*** NEW ROOT ***************************************************
+
+?PR?TIMER0_ISR?FINALPROJECT          -----    -----      -----    -----
+  +--> ?PR?_DISPLAY?FINALPROJECT
+
+?PR?_DISPLAY?FINALPROJECT            -----    -----      -----    -----
+  +--> ?CO?FINALPROJECT
+
+*** NEW ROOT ***************************************************
+
+?C_C51STARTUP                        -----    -----      -----    -----
+  +--> ?PR?MAIN?FINALPROJECT
+  +--> ?C_INITSEG
+
+?PR?MAIN?FINALPROJECT                0020H.0  0000H.1    0021H    000CH
+  +--> ?PR?INIT_TIMER0?FINALPROJECT
+  +--> ?PR?INITUART?FINALPROJECT
+  +--> ?PR?KEYPRO?FINALPROJECT
+
+?PR?KEYPRO?FINALPROJECT              -----    -----      -----    -----
+  +--> ?PR?KEYSCAN?FINALPROJECT
+
+?PR?KEYSCAN?FINALPROJECT             -----    -----      -----    -----
+  +--> ?PR?_DELAYMS?FINALPROJECT
+
+?PR?_DELAYMS?FINALPROJECT            -----    -----      -----    -----
+  +--> ?PR?_DELAYUS2X?FINALPROJECT
+
+
+
+SYMBOL TABLE OF MODULE:  FinalProject (FINALPROJECT)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        FINALPROJECT
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  C:0003H         PUBLIC        _SendByte
+  D:00B0H         PUBLIC        P3
+  D:0009H         PUBLIC        readCounter
+  B:00A8H.7       PUBLIC        EA
+  C:0120H         PUBLIC        UART_SER
+  D:00A8H         PUBLIC        IE
+  C:000EH         PUBLIC        _DelayMs
+  D:000BH         PUBLIC        TempData
+  B:00A8H.4       PUBLIC        ES
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  B:0098H.1       PUBLIC        TI
+  B:00A0H.2       PUBLIC        LATCH1
+  B:00A0H.3       PUBLIC        LATCH2
+  C:0236H         PUBLIC        main
+BL51 BANKED LINKER/LOCATER V5.03                                                      06/05/2025  03:39:48  PAGE 3
+
+
+  C:027BH         PUBLIC        Init_Timer0
+  D:0099H         PUBLIC        SBUF
+  C:0182H         PUBLIC        KeyScan
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:01E5H         PUBLIC        _Display
+  C:0253H         PUBLIC        dofly_DuanMa
+  C:028DH         PUBLIC        _DelayUs2x
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  D:008DH         PUBLIC        TH1
+  D:008AH         PUBLIC        TL0
+  C:026BH         PUBLIC        InitUART
+  B:0088H.4       PUBLIC        TR0
+  C:0263H         PUBLIC        dofly_WeiMa
+  B:0088H.6       PUBLIC        TR1
+  C:00B2H         PUBLIC        KeyPro
+  C:01B8H         PUBLIC        Timer0_isr
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          INITUART
+  C:026BH         LINE#         23
+  C:026BH         LINE#         24
+  C:026BH         LINE#         26
+  C:026EH         LINE#         27
+  C:0271H         LINE#         28
+  C:0274H         LINE#         29
+  C:0276H         LINE#         30
+  C:0278H         LINE#         31
+  C:027AH         LINE#         32
+  -------         ENDPROC       INITUART
+  -------         PROC          _SENDBYTE
+  D:0007H         SYMBOL        dat
+  C:0003H         LINE#         35
+  C:0003H         LINE#         36
+  C:0003H         LINE#         37
+  C:0005H         LINE#         38
+  C:0008H         LINE#         39
+  C:000AH         LINE#         40
+  -------         ENDPROC       _SENDBYTE
+  -------         PROC          UART_SER
+  -------         DO            
+  D:0007H         SYMBOL        Temp
+  -------         ENDDO         
+  C:0120H         LINE#         42
+  C:012FH         LINE#         46
+  C:0132H         LINE#         47
+  C:0132H         LINE#         48
+  C:0134H         LINE#         49
+  C:0136H         LINE#         50
+  C:0143H         LINE#         51
+  C:0150H         LINE#         52
+  C:0158H         LINE#         53
+  C:015AH         LINE#         54
+  C:0167H         LINE#         55
+  C:016AH         LINE#         56
+BL51 BANKED LINKER/LOCATER V5.03                                                      06/05/2025  03:39:48  PAGE 4
+
+
+  C:0170H         LINE#         57
+  C:0170H         LINE#         59
+  C:0170H         LINE#         60
+  C:0173H         LINE#         61
+  C:0175H         LINE#         62
+  -------         ENDPROC       UART_SER
+  -------         PROC          MAIN
+  -------         DO            
+  D:0007H         SYMBOL        num
+  D:0021H         SYMBOL        i
+  D:0022H         SYMBOL        j
+  D:0023H         SYMBOL        temp
+  B:0020H.0       SYMBOL        Flag
+  D:002BH         SYMBOL        setFlag
+  -------         ENDDO         
+  C:0236H         LINE#         68
+  C:0236H         LINE#         69
+  C:0236H         LINE#         73
+  C:023BH         LINE#         74
+  C:023EH         LINE#         75
+  C:0241H         LINE#         77
+  C:0241H         LINE#         78
+  C:0241H         LINE#         79
+  C:0244H         LINE#         80
+  C:024FH         LINE#         81
+  C:0251H         LINE#         82
+  -------         ENDPROC       MAIN
+  -------         PROC          _DELAYUS2X
+  D:0007H         SYMBOL        t
+  C:028DH         LINE#         86
+  C:028DH         LINE#         87
+  C:028DH         LINE#         88
+  C:028FH         LINE#         89
+  -------         ENDPROC       _DELAYUS2X
+  -------         PROC          _DELAYMS
+  D:0006H         SYMBOL        t
+  C:000EH         LINE#         91
+  C:0010H         LINE#         92
+  C:0010H         LINE#         94
+  C:0016H         LINE#         95
+  C:0016H         LINE#         96
+  C:001BH         LINE#         97
+  C:0020H         LINE#         98
+  C:0022H         LINE#         99
+  -------         ENDPROC       _DELAYMS
+  -------         PROC          _DISPLAY
+  D:0007H         SYMBOL        FirstBit
+  D:0005H         SYMBOL        Num
+  -------         DO            
+  D:0008H         SYMBOL        i
+  -------         ENDDO         
+  C:01E5H         LINE#         101
+  C:01E5H         LINE#         102
+  C:01E5H         LINE#         106
+  C:01E8H         LINE#         107
+  C:01EAH         LINE#         108
+  C:01ECH         LINE#         110
+BL51 BANKED LINKER/LOCATER V5.03                                                      06/05/2025  03:39:48  PAGE 5
+
+
+  C:01F5H         LINE#         111
+  C:01F7H         LINE#         112
+  C:01F9H         LINE#         114
+  C:0201H         LINE#         115
+  C:0203H         LINE#         116
+  C:0205H         LINE#         118
+  C:0207H         LINE#         119
+  C:020CH         LINE#         120
+  C:020FH         LINE#         123
+  -------         ENDPROC       _DISPLAY
+  -------         PROC          INIT_TIMER0
+  C:027BH         LINE#         125
+  C:027BH         LINE#         126
+  C:027BH         LINE#         127
+  C:027EH         LINE#         130
+  C:0280H         LINE#         131
+  C:0282H         LINE#         132
+  C:0284H         LINE#         133
+  -------         ENDPROC       INIT_TIMER0
+  -------         PROC          TIMER0_ISR
+  C:01B8H         LINE#         137
+  C:01C9H         LINE#         139
+  C:01CCH         LINE#         140
+  C:01CFH         LINE#         142
+  C:01D6H         LINE#         144
+  -------         ENDPROC       TIMER0_ISR
+  -------         PROC          KEYSCAN
+  -------         DO            
+  D:0005H         SYMBOL        cord_h
+  D:0007H         SYMBOL        cord_l
+  -------         ENDDO         
+  C:0182H         LINE#         147
+  C:0182H         LINE#         148
+  C:0182H         LINE#         150
+  C:0185H         LINE#         151
+  C:018AH         LINE#         152
+  C:018EH         LINE#         153
+  C:018EH         LINE#         154
+  C:0193H         LINE#         155
+  C:019BH         LINE#         156
+  C:019BH         LINE#         157
+  C:01A0H         LINE#         158
+  C:01A4H         LINE#         159
+  C:01A9H         LINE#         161
+  C:01B1H         LINE#         163
+  C:01B5H         LINE#         164
+  C:01B5H         LINE#         165
+  C:01B7H         LINE#         166
+  -------         ENDPROC       KEYSCAN
+  -------         PROC          KEYPRO
+  C:00B2H         LINE#         168
+  C:00B2H         LINE#         169
+  C:00B2H         LINE#         170
+  C:00EDH         LINE#         171
+  C:00EDH         LINE#         172
+  C:00F0H         LINE#         173
+  C:00F3H         LINE#         174
+BL51 BANKED LINKER/LOCATER V5.03                                                      06/05/2025  03:39:48  PAGE 6
+
+
+  C:00F6H         LINE#         175
+  C:00F9H         LINE#         176
+  C:00FCH         LINE#         177
+  C:00FFH         LINE#         178
+  C:0102H         LINE#         179
+  C:0105H         LINE#         180
+  C:0108H         LINE#         181
+  C:010BH         LINE#         182
+  C:010EH         LINE#         183
+  C:0111H         LINE#         184
+  C:0114H         LINE#         185
+  C:0117H         LINE#         186
+  C:011AH         LINE#         187
+  C:011DH         LINE#         188
+  C:011FH         LINE#         189
+  C:011FH         LINE#         190
+  -------         ENDPROC       KEYPRO
+  -------         ENDMOD        FINALPROJECT
+
+  -------         MODULE        ?C?CCASE
+  C:0210H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDBYTE?FINALPROJECT
+
+Program Size: data=34.1 xdata=0 code=656
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)
